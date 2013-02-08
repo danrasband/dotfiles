@@ -1,5 +1,5 @@
 alias gs="git status"
-alias gf="git fetch"
+alias gf="git fetch -p"
 alias gp="git pull"
 alias ga="git add"
 alias gc="git commit -v"
