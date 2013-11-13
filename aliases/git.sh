@@ -5,6 +5,7 @@ alias ga="git add"
 alias gc="git commit -v"
 alias gl="git log"
 alias gsl="git shortlog"
+alias gd="git diff"
 
 # Git flow stuff.
 if [ -n `which git-flow` ]; then
