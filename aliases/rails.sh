@@ -6,6 +6,10 @@ alias be="bundle exec"
 alias brails="bundle exec rails"
 alias berc="bundle exec rails console"
 alias berg="bundle exec rails generate"
+alias bers="bundle exec rails server"
+alias bersu="bundle exec rails server unicorn"
+alias bersp="bundle exec rails server puma"
+alias berst="bundle exec rails server thin"
 
 # Rake
 alias brake="bundle exec rake"
