@@ -6,6 +6,8 @@ alias gc="git commit -v"
 alias gl="git log"
 alias gsl="git shortlog"
 alias gd="git diff"
+alias gba="git branch -a"
+alias grpo="git remote prune origin"
 
 # Git flow stuff.
 if [ -n `which git-flow` ]; then
