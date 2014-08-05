@@ -1,4 +1,4 @@
-function popstash {
+function gspop {
   local n=$1;
 
   if [ -z "$n" ]; then
@@ -8,7 +8,7 @@ function popstash {
   git stash pop stash@{$n};
 }
 
-function applystash {
+function gsapply {
   local n=$1;
 
   if [ -z "$n" ]; then
