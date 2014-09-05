@@ -8,6 +8,7 @@ alias gsl="git shortlog"
 alias gd="git diff"
 alias gba="git branch -a"
 alias grpo="git remote prune origin"
+alias gslist="git stash list"
 
 # Git flow stuff.
 if [ -n `which git-flow` ]; then
