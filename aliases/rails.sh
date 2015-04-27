@@ -19,4 +19,4 @@ alias berdr="bundle exec rake db:rollback"
 
 # Testing
 alias beg="bundle exec guard"
-
+alias berdreset="bin/rake db:drop && bin/rake db:create && bin/rake db:reset"
