@@ -3,10 +3,13 @@ function dbreset {
   local oldEnv=$RAILS_ENV
 
   if [ -z "$environment" ]; then
-    environment="development";
+    environment=$oldEnv;
+    if [ -z "$environment" ]; then
+      environment="development";
+    fi
   fi
 
   export RAILS_ENV=$environment;
-  bin/rake db:drop && bin/rake db:create && bin/rake db:migrate && bin/rake db:seed;
+  bundle exec rake db:drop && bundle exec rake db:create && bundle exec rake db:migrate && bundle exec rake db:seed;
   RAILS_ENV=$oldEnv
 }
