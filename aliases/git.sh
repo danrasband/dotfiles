@@ -8,6 +8,8 @@ alias gl="git log"
 alias gsl="git shortlog"
 alias gd="git diff"
 alias gba="git branch -a"
+alias gbd="git branch -d"
+alias gbD="git branch -D"
 alias grpo="git remote prune origin"
 alias gslist="git stash list"
 
