@@ -36,3 +36,10 @@ function gsdrop {
 
   git stash drop stash@{$n};
 }
+
+function gprune {
+  git remote prune origin | \
+    grep pruned | \
+    sed 's/.*origin\///' | \
+    xargs git branch -d
+}
