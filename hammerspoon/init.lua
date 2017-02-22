@@ -21,27 +21,47 @@ end
 hs.pathwatcher.new(os.getenv("HOME") .. "/.hammerspoon/", reloadConfig):start()
 hs.notify.new({title="Hammerspoon", informativeText="Hammerspoon config reloaded."}):send()
 
+hs.hotkey.bind({"cmd"}, "Escape", function()
+  local screens = hs.screen.allScreens()
+  for index,value in ipairs(screens) do
+    hs.alert.show('screen ' .. tostring(index) .. ': ' .. tostring(value:id()))
+    hs.alert.show('screen position: ' .. tostring(value:frame().x) .. ',' .. tostring(value:frame().y))
+  end
+
+  local win = hs.window.focusedWindow()
+  local screen = win:screen()
+  hs.alert.show('Current window screen ID: ' .. tostring(screen:id()))
+end)
+
 -- BIND HOTKEYS --
 
 -- Throw
+throw.hotkeys = {"cmd", "alt", "ctrl"}
+-- To previous screen
 hs.hotkey.bind(throw.hotkeys, "Left", function()
-  throw.throw(hs.window.focusedWindow(), 2)
+  local win = hs.window.focusedWindow()
+  local toScreen = win:screen():previous()
+  throw.throw(win, toScreen)
 end)
+-- To next screen
 hs.hotkey.bind(throw.hotkeys, "Right", function()
-  throw.throw(hs.window.focusedWindow(), 1)
+  local win = hs.window.focusedWindow()
+  local toScreen = win:screen():next()
+  throw.throw(win, toScreen)
 end)
 
 -- Resize
+resize.hotkeys = {'cmd', 'ctrl', 'shift'}
 hs.hotkey.bind(resize.hotkeys, "Left", function()
   resize.resize(hs.window.focusedWindow(), 0.5, 1)
 end)
 hs.hotkey.bind(resize.hotkeys, "Right", function()
   resize.resize(hs.window.focusedWindow(), 2, 1)
 end)
-hs.hotkey.bind(resize.hotkeys, "Up", function()
+hs.hotkey.bind(resize.hotkeys, "Down", function()
   resize.resize(hs.window.focusedWindow(), 1, 2)
 end)
-hs.hotkey.bind(resize.hotkeys, "Down", function()
+hs.hotkey.bind(resize.hotkeys, "Up", function()
   resize.resize(hs.window.focusedWindow(), 1, 0.5)
 end)
 hs.hotkey.bind(resize.hotkeys, "Pad5", function()
@@ -49,26 +69,35 @@ hs.hotkey.bind(resize.hotkeys, "Pad5", function()
 end)
 
 -- Resize and Position
--- hs.hotkey.bind(resizeAndPosition.hotkeys, 'H', function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 2, 0, 0, 1, 1)
--- end)
--- hs.hotkey.bind(resizeAndPosition.hotkeys, 'J', function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 2, 0, 0, 0.5, 1)
--- end)
--- hs.hotkey.bind(resizeAndPosition.hotkeys, 'K', function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 2, 0.5, 0, 0.5, 1)
--- end)
--- hs.hotkey.bind(resizeAndPosition.hotkeys, 'L', function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 1, 0, 0, 0.5, 1)
--- end)
--- hs.hotkey.bind(resizeAndPosition.hotkeys, ';', function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 1, 0.5, 0, 0.5, 1)
--- end)
--- hs.hotkey.bind(resizeAndPosition.hotkeys, "'", function()
---   resizeAndPosition.resizeAndPosition(hs.window.focusedWindow(), 1, 0, 0, 1, 1)
--- end)
+resizeAndPosition.hotkeys = {'ctrl', 'alt', 'cmd'}
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'H', function()
+  resizeAndPosition.resizeAndPosition(0, 0, 1, 1)
+end)
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'J', function()
+  resizeAndPosition.resizeAndPosition(0, 0, 0.5, 1)
+end)
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'K', function()
+  resizeAndPosition.resizeAndPosition(0.5, 0, 0.5, 1)
+end)
+-- Top Left
+hs.hotkey.bind(resizeAndPosition.hotkeys, "U", function()
+  resizeAndPosition.resizeAndPosition(0, 0, 0.5, 0.5)
+end)
+-- Top Right
+hs.hotkey.bind(resizeAndPosition.hotkeys, "I", function()
+  resizeAndPosition.resizeAndPosition(0.5, 0, 0.5, 0.5)
+end)
+-- Bottom Left
+hs.hotkey.bind(resizeAndPosition.hotkeys, "M", function()
+  resizeAndPosition.resizeAndPosition(0, 0.5, 0.5, 0.5)
+end)
+-- Bottom Right
+hs.hotkey.bind(resizeAndPosition.hotkeys, ",", function()
+  resizeAndPosition.resizeAndPosition(0.5, 0.5, 0.5, 0.5)
+end)
 
 -- Move
+move.hotkeys = {'alt', 'cmd'}
 hs.hotkey.bind(move.hotkeys, "Left", function()
   local win = hs.window.focusedWindow()
   local frame = win:frame()
@@ -91,6 +120,7 @@ hs.hotkey.bind(move.hotkeys, "Down", function()
 end)
 
 -- Snap
+snap.hotkeys = {'cmd', 'alt', 'ctrl', 'shift'}
 hs.hotkey.bind(snap.hotkeys, "Left", function()
   local win = hs.window.focusedWindow()
   snap.snap(win, "Left")
@@ -109,6 +139,7 @@ hs.hotkey.bind(snap.hotkeys, "Down", function()
 end)
 
 -- Sound
+sound.hotkeys = {'cmd', 'shift'}
 hs.hotkey.bind(sound.hotkeys, "M", function()
   sound.mute()
   hs.timer.doAfter(30, sound.unmute)

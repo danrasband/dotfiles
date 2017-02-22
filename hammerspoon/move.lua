@@ -1,7 +1,5 @@
 local Move = {}
 
-Move.hotkeys = {'alt', 'cmd'}
-
 -- Move the current window to a different position.
 Move.move = function(win, x, y)
   local frame = win:frame()

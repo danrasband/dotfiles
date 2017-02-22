@@ -1,35 +1,29 @@
 local ResizeAndPosition = {}
 
-ResizeAndPosition.hotkeys = {'ctrl', 'alt', 'cmd'}
+-- Resize and position the current window by ratios.
+ResizeAndPosition.resizeAndPosition = function(xPosition, yPosition, wRatio, hRatio)
+  local win = hs.window.focusedWindow()
+  local toFrame = win:screen():frame()
 
--- Resize and position the current window by percentages.
-ResizeAndPosition.resizeAndPosition = function(win, screenId, xPercent, yPercent, wPercent, hPercent)
-  -- local fromFrame = win:frame()
-  -- local currentScreenFrame = win:screen():frame()
-  -- local screen = hs.screen.allScreens()[screenId]
-  -- local toFrame = screen:frame()
+  -- Maintain position on screen
+  if xPosition then
+    toFrame.x = toFrame.w * xPosition + toFrame.x
+  end
 
-  -- -- -- Maintain position on screen
-  -- if xPercent then
-  --   toFrame.x = toFrame.x * xPercent
-  -- else
-  --   toFrame.x = 0
-  -- end
-  -- if yPercent then
-  --   toFrame.y = toFrame.y * yPercent
-  -- else
-  --   toFrame.y = 0
-  -- end
+  if yPosition then
+    toFrame.y = toFrame.h * yPosition + toFrame.y
+  end
 
-  -- -- -- Set width and height
-  -- if wPercent then
-  --   toFrame.w = toFrame.w * wPercent
-  -- end
-  -- if hPercent then
-  --   toFrame.h = toFrame.h * hPercent
-  -- end
+  -- Set width and height
+  if wRatio then
+    toFrame.w = toFrame.w * wRatio
+  end
 
-  -- win:setFrame(toFrame)
+  if hRatio then
+    toFrame.h = toFrame.h * hRatio
+  end
+
+  win:setFrame(toFrame)
 end
 
 return ResizeAndPosition

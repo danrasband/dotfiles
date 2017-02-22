@@ -2,8 +2,6 @@ local move = require('move')
 
 local Snap = {}
 
-Snap.hotkeys = {'cmd', 'alt', 'ctrl', 'shift'}
-
 -- Snap to grid
 Snap.snap = function(win, corner)
   local frame = win:frame()

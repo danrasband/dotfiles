@@ -1,12 +1,9 @@
 local Throw = {}
 
-Throw.hotkeys = {"cmd", "alt", "ctrl"}
-
 -- Throw the current window to the specified screen.
-Throw.throw = function(win, screenId)
+Throw.throw = function(win, screen)
   local fromFrame = win:frame()
   local currentScreenFrame = win:screen():frame()
-  local screen = hs.screen.allScreens()[screenId]
   local toFrame = screen:frame()
 
   -- Maintain height
