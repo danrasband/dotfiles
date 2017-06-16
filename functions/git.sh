@@ -43,3 +43,7 @@ function gprune {
     sed 's/.*origin\///' | \
     xargs git branch -d
 }
+
+function stashstaged {
+  git stash --keep-index && git stash && gspop 1 && git stash show -p | git apply -R
+}
