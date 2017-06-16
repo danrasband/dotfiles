@@ -21,5 +21,5 @@ function dbreset {
       bundle exec rake db:seed;
     fi
   fi
-  RAILS_ENV=$oldEnv
+  export RAILS_ENV=$oldEnv
 }
