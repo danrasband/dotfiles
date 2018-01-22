@@ -45,5 +45,9 @@ function gprune {
 }
 
 function stashstaged {
-  git stash --keep-index && git stash && gspop 1 && git stash show -p | git apply -R
+  read -p "Warning! If you have any new files, this process may delete them. Would you like to continue? (y\n) " yn
+  echo $yn | grep ^[Yy]$
+  result=$?
+  if [ $result -eq 1 ]; then exit 1; fi
+  git stash --keep-index && git stash -u && gspop 1 && git stash show -p | git apply -R
 }

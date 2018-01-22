@@ -1,6 +1,9 @@
 function dbreset {
   local environment=$1;
   local oldEnv=$RAILS_ENV
+  if [ -z "$oldEnv" ]; then
+    oldEnv="development";
+  fi
 
   if [ -z "$environment" ]; then
     environment=$oldEnv;

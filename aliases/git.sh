@@ -11,6 +11,7 @@ alias gba="git branch -a"
 alias gbd="git branch -d"
 alias gbD="git branch -D"
 alias grpo="git remote prune origin"
+alias grc="git rebase --continue"
 alias gslist="git stash list"
 
 # Git flow stuff.
