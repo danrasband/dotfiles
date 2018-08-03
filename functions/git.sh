@@ -38,10 +38,11 @@ function gsdrop {
 }
 
 function gprune {
-  git remote prune origin | \
-    grep pruned | \
-    sed 's/.*origin\///' | \
-    xargs git branch -d
+  git pull \
+    && git remote prune origin \
+      | grep pruned \
+      | sed 's/.*origin\///' \
+      | xargs git branch -d
 }
 
 function stashstaged {
