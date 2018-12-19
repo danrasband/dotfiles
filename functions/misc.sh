@@ -6,12 +6,11 @@ function countdown {
   fi
 
   while [ $seconds -gt 0 ]; do
-    echo "$seconds..."
     sleep 1;
+    echo -n '.'
     seconds=$((seconds-1));
   done
 
-  echo 'Boom!';
-  say "Boom\!";
+  say 'Done'
   return;
 }    
