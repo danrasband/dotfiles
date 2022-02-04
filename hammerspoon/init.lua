@@ -70,6 +70,9 @@ end)
 
 -- Resize and Position
 resizeAndPosition.hotkeys = {'ctrl', 'alt', 'cmd'}
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'G', function()
+  resizeAndPosition.resizeAndPosition(0, 0, 0.79, 1)
+end)
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'H', function()
   resizeAndPosition.resizeAndPosition(0, 0, 1, 1)
 end)
