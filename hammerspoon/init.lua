@@ -70,39 +70,69 @@ end)
 
 -- Resize and Position
 resizeAndPosition.hotkeys = {'ctrl', 'alt', 'cmd'}
+-- Left Two-Thirds
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'G', function()
   resizeAndPosition.resizeAndPosition(0, 0, 0.79, 1)
 end)
+-- Fullscreen
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'H', function()
   resizeAndPosition.resizeAndPosition(0, 0, 1, 1)
 end)
+-- Left Half
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'J', function()
   resizeAndPosition.resizeAndPosition(0, 0, 0.5, 1)
 end)
+-- Right Half
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'K', function()
   resizeAndPosition.resizeAndPosition(0.5, 0, 0.5, 1)
 end)
+-- Left Third
 hs.hotkey.bind(resizeAndPosition.hotkeys, 'L', function()
   resizeAndPosition.resizeAndPosition(0, 0, 0.33, 1)
 end)
+-- Right Two-Thirds
 hs.hotkey.bind(resizeAndPosition.hotkeys, ';', function()
   resizeAndPosition.resizeAndPosition(0.33, 0, 0.66, 1)
 end)
 -- Top Left
-hs.hotkey.bind(resizeAndPosition.hotkeys, "U", function()
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'U', function()
   resizeAndPosition.resizeAndPosition(0, 0, 0.5, 0.5)
 end)
 -- Top Right
-hs.hotkey.bind(resizeAndPosition.hotkeys, "I", function()
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'I', function()
   resizeAndPosition.resizeAndPosition(0.5, 0, 0.5, 0.5)
 end)
+-- Top Left Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, '[', function()
+  resizeAndPosition.resizeAndPosition(0, 0, 0.33, 0.5)
+end)
+-- Top Middle Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, ']', function()
+  resizeAndPosition.resizeAndPosition(0.33, 0, 0.33, 0.5)
+end)
+-- Top Right Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, '\\', function()
+  resizeAndPosition.resizeAndPosition(0.66, 0, 0.33, 0.5)
+end)
 -- Bottom Left
-hs.hotkey.bind(resizeAndPosition.hotkeys, "M", function()
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'M', function()
   resizeAndPosition.resizeAndPosition(0, 0.5, 0.5, 0.5)
 end)
 -- Bottom Right
-hs.hotkey.bind(resizeAndPosition.hotkeys, ",", function()
+hs.hotkey.bind(resizeAndPosition.hotkeys, ',', function()
   resizeAndPosition.resizeAndPosition(0.5, 0.5, 0.5, 0.5)
+end)
+-- Bottom Left Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'C', function()
+  resizeAndPosition.resizeAndPosition(0, 0.5, 0.33, 0.5)
+end)
+-- Bottom Middle Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'V', function()
+  resizeAndPosition.resizeAndPosition(0.33, 0.5, 0.33, 0.5)
+end)
+-- Bottom Right Third
+hs.hotkey.bind(resizeAndPosition.hotkeys, 'B', function()
+  resizeAndPosition.resizeAndPosition(0.66, 0.5, 0.33, 0.5)
 end)
 
 -- Move
