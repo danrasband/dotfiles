@@ -1,93 +1,67 @@
-function journalinit() {
-  local directory=$HOME/.journal
-  echo -n "What is your gpg key's email address? "
-  read email
+# Journal Functions
+
+function journalinit {
+  local journal_name=${1:-"journal"}
+  local journal_path=~/.journals/"$journal_name"
   
-  echo $email > $directory/.config
+  mkdir -p "$journal_path"
+  echo "Journal '$journal_name' initialized at $journal_path"
+  
+  cat > "$journal_path/notes.txt" << EOF
+# Journal: $journal_name
+Created: $(date +%Y-%m-%d)
 
-  echo "Your journal will be encrypted for $email."
+EOF
 }
 
-function journalnew() {
-  local directory=$HOME/.journal
-  local name=$1
-  local filepath=$directory/$name
-  local config=$directory/.config
-
-  if [ ! -f "$config" ]; then
-    echo "Please run journalinit to configure your journal."
-    return
+function journalnew {
+  local journal_name=${1:-"journal"}
+  local journal_path=~/.journals/"$journal_name"
+  local note_file="$journal_path/notes.txt"
+  
+  if [ ! -f "$note_file" ]; then
+    echo "Journal not found. Run journalinit first."
+    return 1
   fi
-
-  email=$(cat $config | tr -d '\n')
-  if [ -z "$email" ]; then
-    echo "Please run journalinit to reconfigure your journal. The email recipient is empty."
-    return
-  fi
-
-  if [ -z "$name" ]; then
-    echo "Please specify a file name."
-    return
-  fi
-
-  if [ ! -d "$directory" ]; then
-    mkdir $directory
-  fi
-
-  if [ -f "$filepath.gpg" ]; then
-    echo "File already exists. Use journalopen to access it."
-    return
-  fi
-
-  rvim $filepath;
-
-  if [ -f "$filepath" ]; then
-    gpg --encrypt --recipient $email $filepath;
-    rm $filepath
-    return
-  fi
-
-  echo 'Finished without creating journal file.'
+  
+  local note_content
+  read -p "Enter note: " note_content
+  
+  echo "$note_content" >> "$note_file"
+  echo "Note added to journal"
 }
 
-function journalopen() {
-  local directory=$HOME/.journal
-  local name=$1
-  local filepath=$directory/$name
-
-  if [ ! -f "$filepath.gpg" ]; then
-    echo 'Journal entry "'$name'" does not exist.'
-    return
+function journalopen {
+  local journal_name=${1:-"journal"}
+  local journal_path=~/.journals/"$journal_name"
+  
+  if [ ! -d "$journal_path" ]; then
+    echo "Journal not found"
+    return 1
   fi
-
-  echo "decrypting $filepath.gpg"
-  gpg --output $filepath --decrypt $filepath.gpg
-  rvim $filepath
-
-  gpg -c $filepath
-  rm $filepath
+  
+  cat "$journal_path/notes.txt"
 }
 
-function journalrm() {
-  local directory=$HOME/.journal
-  local name=$1
-  local filepath=$directory/$name
-
-  if [ -z "$name" ]; then
-    echo 'Specify a journal name'
-    return
+function journalrm {
+  local journal_name=$1
+  
+  if [ -z "$journal_name" ]; then
+    echo "Usage: journalrm <journal_name>"
+    return 1
   fi
-
-  rm $filepath $filepath.gpg
+  
+  local journal_path=~/.journals/"$journal_name"
+  
+  if [ -d "$journal_path" ]; then
+    rm -rf "$journal_path"
+    echo "Journal '$journal_name' removed"
+  else
+    echo "Journal not found"
+  fi
 }
 
-function journalls() {
-  local directory=$HOME/.journal
-
-  local entries=$(ls $directory)
-
-  for entry in ${entries[@]}; do
-    name=${entry:0:$((${#entry}-4))};
-    echo $name
-  done
+function journalls {
+  echo "Available journals:"
+  ls -1 ~/.journals/ 2>/dev/null
 }
