@@ -1,11 +1,11 @@
 # AWS Profile Aliases
 
 # AWS SSO Login Aliases
-alias iot-dev="aws sso login --profile iot-dev"
-alias iot-stg="aws sso login --profile iot-stage"
-alias iot-stage="aws sso login --profile iot-stage"
-alias iot-prod="aws sso login --profile iot-prod"
-alias datahub-prod="aws sso login --profile datahub-prod"
+alias iot-dev="aws-login iot-dev";
+alias iot-stg="aws-login iot-stage"
+alias iot-stage="aws-login iot-stage"
+alias iot-prod="aws-login iot-prod"
+alias datahub-prod="aws-login datahub-prod"
 
 # AWS CLI Profile Shortcuts
 alias aws-dev="aws --profile iot-dev"
