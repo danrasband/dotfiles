@@ -1,37 +1,25 @@
 # Git Worktree Helpers
 
-function cdw {
-  local worktree_name=$1
-  local worktree_path
-  
-  if [ -z "$worktree_name" ]; then
-    worktree_name=$(git worktree list | awk '{print $1}')
+# Git Worktree Navigation
+function cdw { 
+  local worktree="$1";
+  local directory=".worktrees/${worktree}";
+  if [ -d "$directory" ]; then
+    cd "$directory";
+  else
+    echo "Worktree ${worktree} does not exist.";
   fi
-  
-  worktree_path=$(git worktree list "$worktree_name" --porcelain | awk '{print $2}')
-  
-  if [ -z "$worktree_path" ]; then
-    echo "Worktree not found: $worktree_name"
-    return 1
-  fi
-  
-  cd "$worktree_path"
-}
+} 
 
+# Git Worktree Peaking
 function lsw {
-  local worktree_name=$1
-  
-  if [ -z "$worktree_name" ]; then
-    worktree_name=$(git worktree list | awk '{print $1}')
+  local worktree="$1"; 
+  local directory=".worktrees/${worktree}";
+  if [ -d "$directory" ]; then
+    ls "$directory";
+  else
+    echo "Worktree ${worktree} does not exist.";
   fi
-  
-  if [ -z "$worktree_name" ]; then
-    echo "No worktree specified"
-    return 1
-  fi
-  
-  git worktree list "$worktree_name" --porcelain | awk '{print $2}'
-  ls "$worktree_name"
 }
 
 # Git Stash Helpers
