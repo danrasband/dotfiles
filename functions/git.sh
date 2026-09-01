@@ -1,28 +1,64 @@
 # Git Worktree Helpers
 
-# Git Worktree Navigation
-function cdw { 
-  local worktree="$1";
-  local directory=".worktrees/${worktree}";
-  if [ -d "$directory" ]; then
-    cd "$directory";
-  else
-    echo "Worktree ${worktree} does not exist.";
-  fi
-} 
-
-# Git Worktree Peaking
-function lsw {
-  local worktree="$1"; 
-  local directory=".worktrees/${worktree}";
-  if [ -d "$directory" ]; then
-    ls "$directory";
-  else
-    echo "Worktree ${worktree} does not exist.";
-  fi
+_worktree_dir() {
+  git worktree list --porcelain 2>/dev/null | awk -v RS='' -v t="$1" '
+    {
+      path = ""; branch = ""
+      n = split($0, lines, "\n")
+      for (i = 1; i <= n; i++) {
+        if (lines[i] ~ /^worktree /) path = substr(lines[i], 10)
+        else if (lines[i] ~ /^branch /) {
+          branch = substr(lines[i], 8)
+          sub("refs/heads/", "", branch)
+        }
+      }
+      base = path
+      sub(/.*\//, "", base)
+      if (branch == t || base == t) { print path; exit }
+    }
+  '
 }
 
-# Git Stash Helpers
+cdw() {
+  local dir
+  dir=$(_worktree_dir "$1")
+  if [[ -z "$dir" ]]; then
+    echo "Worktree ${1} does not exist." >&2
+    return 1
+  fi
+  cd "$dir"
+}
+
+lsw() {
+  local dir
+  dir=$(_worktree_dir "$1")
+  if [[ -z "$dir" ]]; then
+    echo "Worktree ${1} does not exist." >&2
+    return 1
+  fi
+  ls "$dir"
+}
+
+_cdw() {
+  local -a candidates
+  local wt_path wt_branch
+  while IFS= read -r line; do
+    case "$line" in
+      worktree\ *) wt_path="${line#worktree }" ;;
+      branch\ *)
+        wt_branch="${line#branch }"
+        wt_branch="${wt_branch#refs/heads/}"
+        candidates+=("$wt_branch")
+        ;;
+      "") candidates+=("${wt_path:t}") ;;
+    esac
+  done < <(git worktree list --porcelain 2>/dev/null; echo)
+  _describe 'worktree' candidates
+}
+compdef _cdw cdw lsw
+
+
+## Git Stash Helpers
 
 function gspop {
   local n=$1
