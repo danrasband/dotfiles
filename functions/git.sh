@@ -19,7 +19,32 @@ _worktree_dir() {
   '
 }
 
+gwa() {
+  local branch="$1"
+  if [[ -z "$branch" ]]; then
+    echo "Usage: gwa <branch-name>" >&2
+    return 1
+  fi
+
+  local name="$2"
+  if [[ -z "$name" ]]; then
+    name=$(basename "$branch" | tr -c 'a-zA-Z0-9' '-' | sed -E 's/-+/-/g; s/^-|-$//g')
+  fi
+
+  if git show-ref --verify --quiet "refs/heads/$branch" \
+    || git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+    git worktree add ".worktrees/$name" "$branch"
+  else
+    git worktree add -b "$branch" ".worktrees/$name"
+  fi
+}
+
 cdw() {
+  if [[ -z "$1" ]]; then
+    cd ".worktrees"
+    return
+  fi
+
   local dir
   dir=$(_worktree_dir "$1")
   if [[ -z "$dir" ]]; then
@@ -29,7 +54,36 @@ cdw() {
   cd "$dir"
 }
 
+gwr() {
+  local -a force
+  local name
+  for arg in "$@"; do
+    case "$arg" in
+      --force|-f) force=(--force) ;;
+      *) name="$arg" ;;
+    esac
+  done
+
+  if [[ -z "$name" ]]; then
+    echo "Usage: gwr [--force|-f] <worktree-name>" >&2
+    return 1
+  fi
+
+  local dir
+  dir=$(_worktree_dir "$name")
+  if [[ -z "$dir" ]]; then
+    echo "Worktree ${name} does not exist." >&2
+    return 1
+  fi
+  git worktree remove "${force[@]}" "$dir"
+}
+
 lsw() {
+  if [[ -z "$1" ]]; then
+    git worktree list
+    return
+  fi
+
   local dir
   dir=$(_worktree_dir "$1")
   if [[ -z "$dir" ]]; then
@@ -55,7 +109,17 @@ _cdw() {
   done < <(git worktree list --porcelain 2>/dev/null; echo)
   _describe 'worktree' candidates
 }
-compdef _cdw cdw lsw
+compdef _cdw cdw lsw gwr
+
+_gwa() {
+  if (( CURRENT > 2 )); then
+    return
+  fi
+  local -a branches
+  branches=(${(f)"$(git for-each-ref --format='%(refname:short)' refs/heads refs/remotes 2>/dev/null)"})
+  _describe 'branch' branches
+}
+compdef _gwa gwa
 
 
 ## Git Stash Helpers

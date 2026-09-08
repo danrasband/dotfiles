@@ -16,6 +16,5 @@ alias gbD="git branch -D";
 alias grpo="git remote prune origin";
 alias grc="git rebase --continue";
 alias gslist="git stash list";
-alias gwa="git worktree add";
 alias gwl="git worktree list";
 alias r="open-repo";
