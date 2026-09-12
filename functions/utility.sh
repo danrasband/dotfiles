@@ -18,7 +18,8 @@ function countdown {
   done
   
   echo
-  echo "Countdown complete!"
+  echo "Countdown complete\!"
+  say "Countdown complete\!"
 }
 
 # Put all non-directory files into folders based on their extensions.
