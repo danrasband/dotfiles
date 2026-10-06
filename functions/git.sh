@@ -31,12 +31,18 @@ gwa() {
     name=$(basename "$branch" | tr -c 'a-zA-Z0-9' '-' | sed -E 's/-+/-/g; s/^-|-$//g')
   fi
 
+  local common_dir root_dir
+  common_dir=$(git rev-parse --git-common-dir) || return 1
+  root_dir=$(dirname "$common_dir")
+
   if git show-ref --verify --quiet "refs/heads/$branch" \
     || git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-    git worktree add ".worktrees/$name" "$branch"
+    git worktree add "${root_dir}/.worktrees/$name" "$branch" || return 1
   else
-    git worktree add -b "$branch" ".worktrees/$name"
+    git worktree add -b "$branch" "${root_dir}/.worktrees/$name" || return 1
   fi
+
+  cdw "$branch"
 }
 
 cdw() {
