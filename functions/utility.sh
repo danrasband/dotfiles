@@ -38,3 +38,19 @@ function cleanup-files-by-ext {
     fi
   done
 }
+
+function from-timestamp {
+  timestamp="$1"
+  if [ "${#timestamp}" -eq "13" ]; then
+    timestamp=${timestamp:0:10}
+  fi
+
+  if [ "${#timestamp}" -ne "10" ]; then
+    echo "Invalid timestamp. Must be 10 digits.";
+    return 1;
+  fi
+
+  ruby -e "puts Time.at(${timestamp});"
+}
+
+alias ts=from-timestamp;
