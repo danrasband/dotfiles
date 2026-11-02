@@ -33,16 +33,32 @@ gwa() {
 
   local common_dir root_dir
   common_dir=$(git rev-parse --git-common-dir) || return 1
-  root_dir=$(dirname "$common_dir")
+  root_dir=$(dirname $(realpath "$common_dir"))
 
+  local wt_dir="${root_dir}/.worktrees/$name"
+
+  # Skip hooks during add; post-checkout runs manually below, after .env is copied.
   if git show-ref --verify --quiet "refs/heads/$branch" \
     || git show-ref --verify --quiet "refs/remotes/origin/$branch"; then
-    git worktree add "${root_dir}/.worktrees/$name" "$branch" || return 1
+    git -c core.hooksPath=/dev/null worktree add "$wt_dir" "$branch" || return 1
   else
-    git worktree add -b "$branch" "${root_dir}/.worktrees/$name" || return 1
+    git -c core.hooksPath=/dev/null worktree add -b "$branch" "$wt_dir" || return 1
   fi
 
-  cdw "$branch"
+  cdw "$name" || return 1
+  if [[ -f "${root_dir}/.env" ]]; then
+    ln -s "${root_dir}/.env" || echo "Failed to create symlink for .env" >&2
+  fi
+
+  # Install dependencies if the project uses pnpm.
+  if [[ -f pnpm-lock.yaml ]] \
+    || { [[ -f package.json ]] && grep -q '"packageManager": *"pnpm@' package.json; }; then
+    if command -v pnpm >/dev/null 2>&1; then
+      pnpm install
+    else
+      echo "pnpm project detected, but pnpm is not installed." >&2
+    fi
+  fi
 }
 
 cdw() {
@@ -132,51 +148,51 @@ compdef _gwa gwa
 
 function gspop {
   local n=$1
-  
+
   if [ -z "$n" ]; then
     n="0"
   fi
-  
+
   git stash pop stash@{$n}
 }
 
 function gsapply {
   local n=$1
-  
+
   if [ -z "$n" ]; then
     n="0"
   fi
-  
+
   git stash apply stash@{$n}
 }
 
 function gsshow {
   local n=$1
-  
+
   if [ -z "$n" ]; then
     n="0"
   fi
-  
+
   git stash show stash@{$n}
 }
 
 function gsshowpatch {
   local n=$1
-  
+
   if [ -z "$n" ]; then
     n="0"
   fi
-  
+
   git stash show -p stash@{$n}
 }
 
 function gsdrop {
   local n=$1
-  
+
   if [ -z "$n" ]; then
     n="0"
   fi
-  
+
   git stash drop stash@{$n}
 }
 
