@@ -228,6 +228,9 @@ function open-repo {
   suffix=$1;
   if [ ! -z "$suffix" ]; then
     case "$suffix" in
+      "e")
+        suffix="environments"
+        ;;
       "p")
         suffix="pipelines"
         ;;
